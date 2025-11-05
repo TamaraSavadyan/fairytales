@@ -11,8 +11,23 @@
         "yiisoft/yii2-debug": "~2.1.0",
         "yiisoft/yii2-gii": "~2.2.0"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            }
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -20,4 +35,3 @@
         }
     }
 }
-

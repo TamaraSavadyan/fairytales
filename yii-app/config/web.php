@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'fairytales-app',
+    'name' => 'Генератор сказок',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
