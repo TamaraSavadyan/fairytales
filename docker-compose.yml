@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  python-api:
+    build:
+      context: ./python-api
+      dockerfile: Dockerfile
+    container_name: story-generator-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./python-api/app:/app/app  # Для разработки - монтируем код
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - story-network
+
+  yii-app:
+    build:
+      context: ./yii-app
+      dockerfile: Dockerfile
+    container_name: story-generator-web
+    ports:
+      - "8080:80"
+    environment:
+      - PYTHON_API_URL=http://python-api:8000
+      - YII_ENV=dev
+      - YII_DEBUG=1
+    volumes:
+      - ./yii-app:/var/www/html
+      - ./yii-module:/var/www/html/modules/story
+    depends_on:
+      - python-api
+    restart: unless-stopped
+    networks:
+      - story-network
+
+networks:
+  story-network:
+    driver: bridge
+

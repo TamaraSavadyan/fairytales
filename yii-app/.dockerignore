@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+.vscode
+.env
+.env.local
+runtime/*
+web/assets/*
+vendor/*
+composer.lock
+*.log
+.DS_Store
+tests
+

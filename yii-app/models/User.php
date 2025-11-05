@@ -1,0 +1,41 @@
+<?php
+
+namespace app\models;
+
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+
+class User extends ActiveRecord implements IdentityInterface
+{
+    public static function tableName()
+    {
+        return '{{%user}}';
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        return '';
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return true;
+    }
+}
+

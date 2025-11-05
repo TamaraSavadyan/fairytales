@@ -1,0 +1,23 @@
+{
+    "name": "yii2/fairytales-demo",
+    "description": "Yii2 demo application for story generator",
+    "type": "project",
+    "require": {
+        "php": ">=7.4.0",
+        "yiisoft/yii2": "~2.0.0",
+        "yiisoft/yii2-bootstrap4": "~2.0.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.1.0",
+        "yiisoft/yii2-gii": "~2.2.0"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": ""
+        }
+    }
+}
+
