@@ -60,7 +60,6 @@ class OpenAIStoryGenerator:
         language_name = "русский" if language == "ru" else "казахский"
         characters_str = ", ".join(characters)
         
-        # Формируем заголовок
         header = f"# Сказка для {age}-летнего ребёнка\n\n"
         header += f"**Язык:** {language_name}\n\n"
         header += f"**Персонажи:** {characters_str}\n\n\n"
@@ -68,9 +67,8 @@ class OpenAIStoryGenerator:
         yield header
         
         try:
-            # Вызов OpenAI API с потоковым ответом
             stream = self.client.chat.completions.create(
-                model="gpt-4o-mini",  # Можно изменить на gpt-4 или другой модель
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "Ты опытный рассказчик детских сказок. Пиши увлекательные, добрые и поучительные истории, подходящие для указанного возраста."},
                     {"role": "user", "content": prompt}
@@ -80,12 +78,10 @@ class OpenAIStoryGenerator:
                 max_tokens=2000
             )
             
-            # Читаем поток
             for chunk in stream:
                 if chunk.choices[0].delta.content is not None:
                     yield chunk.choices[0].delta.content
             
-            # Добавляем подвал
             footer = f"\n\n---\n_Сказка сгенерирована: {datetime.utcnow().isoformat()}Z_\n"
             yield footer
             

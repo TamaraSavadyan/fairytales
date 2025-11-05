@@ -64,8 +64,6 @@ docker run -d \
   story-generator-api
 ```
 
-Подробная инструкция: [DOCKER.md](../DOCKER.md)
-
 ### Режим разработки (без Docker)
 
 ```bash

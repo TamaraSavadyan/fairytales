@@ -32,12 +32,8 @@ fairytales/
 │   ├── Dockerfile
 │   └── README.md
 ├── docker-compose.yml   # Конфигурация Docker Compose
-└── README.md            # Этот файл
+└── README.md            
 ```
-
-## Быстрый старт
-
-> 💡 **Быстрая инструкция:** См. [QUICKSTART.md](QUICKSTART.md)
 
 ### Запуск через Docker (Рекомендуется)
 
@@ -270,7 +266,6 @@ for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
 
 - [Python API README](python-api/README.md) - подробная документация Python сервиса
 - [Yii 2 модуль README](yii-module/README.md) - документация по установке и использованию модуля
-- [Docker инструкция](DOCKER.md) - подробная инструкция по запуску через Docker
 
 ## Разработка
 

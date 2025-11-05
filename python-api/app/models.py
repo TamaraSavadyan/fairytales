@@ -19,7 +19,6 @@ class StoryRequest(BaseModel):
     def validate_characters(cls, v: List[str]) -> List[str]:
         if not v or len(v) == 0:
             raise ValueError('Список персонажей должен содержать минимум один элемент')
-        # Фильтруем пустые строки
         filtered = [char.strip() for char in v if char.strip()]
         if not filtered:
             raise ValueError('Список персонажей должен содержать минимум один непустой элемент')

@@ -54,7 +54,6 @@ $availableCharacters = StoryForm::getAvailableCharacters();
                 $('#characters-container').html(html);
             });
             
-            // Инициализация при загрузке страницы
             $(document).ready(function() {
                 $('#language-select').trigger('change');
             });

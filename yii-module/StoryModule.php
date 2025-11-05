@@ -30,8 +30,6 @@ class StoryModule extends \yii\base\Module
     public function init()
     {
         parent::init();
-
-        // Кастомная инициализация модуля
     }
 }
 

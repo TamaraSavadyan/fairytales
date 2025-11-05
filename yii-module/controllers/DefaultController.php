@@ -22,7 +22,6 @@ class DefaultController extends Controller
         $model = new StoryForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // Перенаправляем на action генерации
             return $this->redirect(['result', 'age' => $model->age, 'language' => $model->language, 'characters' => $model->characters]);
         }
 
@@ -59,22 +58,18 @@ class DefaultController extends Controller
         $language = Yii::$app->request->get('language', '');
         $characters = Yii::$app->request->get('characters', []);
         
-        // Обработка случая, когда characters передаётся как строка
         if (!is_array($characters)) {
             $characters = [$characters];
         }
-        // Фильтруем пустые значения
         $characters = array_filter($characters, function($char) {
             return !empty($char) && is_string($char);
         });
 
-        // Валидация
         if ($age <= 0 || !in_array($language, ['ru', 'kk']) || empty($characters)) {
             Yii::$app->response->statusCode = 400;
             return json_encode(['error' => 'Некорректные параметры запроса']);
         }
 
-        // Подготовка данных для запроса
         $postData = json_encode([
             'age' => $age,
             'language' => $language,
@@ -85,13 +80,11 @@ class DefaultController extends Controller
         $apiUrl = rtrim($module->pythonApiUrl, '/') . '/generate_story';
         $timeout = $module->timeout ?? 300;
 
-        // Настройка ответа для потоковой передачи
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'text/markdown; charset=utf-8');
         Yii::$app->response->headers->set('X-Accel-Buffering', 'no');
         Yii::$app->response->headers->set('Cache-Control', 'no-cache');
 
-        // Создание cURL запроса
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -112,7 +105,6 @@ class DefaultController extends Controller
         });
 
         try {
-            // Отключаем буферизацию вывода
             if (ob_get_level() > 0) {
                 ob_end_flush();
             }
@@ -136,7 +128,6 @@ class DefaultController extends Controller
             }
 
         } catch (\Exception $e) {
-            // В случае ошибки выводим сообщение
             echo "\n\n**Ошибка:** Не удалось получить ответ от Python API. " . htmlspecialchars($e->getMessage()) . "\n";
             Yii::$app->response->statusCode = 500;
         } finally {

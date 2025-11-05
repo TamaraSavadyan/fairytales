@@ -33,6 +33,23 @@ COPY composer.json composer.lock* ./
 # Установка зависимостей
 RUN composer install --no-dev --optimize-autoloader --no-interaction || true
 
+# Конфигурация PHP-FPM
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Конфигурация Nginx
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/default.conf /etc/nginx/http.d/default.conf
+
+# Конфигурация Supervisor
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Entrypoint скрипт (копируем до COPY . . чтобы избежать проблем)
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && \
+    test -f /usr/local/bin/entrypoint.sh && \
+    test -x /usr/local/bin/entrypoint.sh
+
 # Копирование приложения
 COPY . .
 
@@ -41,23 +58,9 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/runtime \
     && chmod -R 755 /var/www/html/web/assets
 
-# Конфигурация PHP-FPM
-COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Конфигурация Nginx
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/http.d/default.conf
-
 # Создание директорий для логов и pid файлов
 RUN mkdir -p /var/log/supervisor /var/log/nginx /var/run && \
     chmod -R 755 /var/log/supervisor /var/log/nginx /var/run
-
-# Конфигурация Supervisor
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Entrypoint скрипт
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 

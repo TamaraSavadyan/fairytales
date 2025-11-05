@@ -41,7 +41,6 @@ def generate_story(age, language, characters, api_url="http://localhost:8000"):
         
         response.raise_for_status()
         
-        # Читаем потоковый ответ
         for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
             if chunk:
                 print(chunk, end='', flush=True)
@@ -57,9 +56,7 @@ def generate_story(age, language, characters, api_url="http://localhost:8000"):
 
 
 if __name__ == "__main__":
-    # Пример использования
     if len(sys.argv) > 1:
-        # Использование из командной строки
         import argparse
         
         parser = argparse.ArgumentParser(description='Генератор сказок')
@@ -71,7 +68,6 @@ if __name__ == "__main__":
         args = parser.parse_args()
         generate_story(args.age, args.language, args.characters, args.api_url)
     else:
-        # Пример по умолчанию
         print("Использование без параметров - запуск примера\n")
         generate_story(
             age=6,

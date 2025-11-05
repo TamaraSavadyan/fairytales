@@ -8,7 +8,6 @@ $this->title = 'Результат генерации сказки';
 $this->params['breadcrumbs'][] = ['label' => 'Генератор сказок', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-// Преобразуем массив characters в формат для URL
 $charactersParam = is_array($model->characters) ? $model->characters : [$model->characters];
 $charactersUrl = '';
 foreach ($charactersParam as $char) {
@@ -51,13 +50,11 @@ $streamUrl = Url::to(['stream', 'age' => $model->age, 'language' => $model->lang
 </div>
 
 <?php
-// JavaScript для потоковой загрузки и отображения
 $script = <<<JS
 (function() {
     var storyContent = document.getElementById('story-content');
     var streamUrl = '{$streamUrl}';
     
-    // Используем Fetch API для потокового чтения
     fetch(streamUrl, {
         method: 'GET',
         headers: {
@@ -76,7 +73,6 @@ $script = <<<JS
         function readChunk() {
             return reader.read().then(function(result) {
                 if (result.done) {
-                    // Убираем индикатор загрузки если есть
                     var loadingDiv = storyContent.querySelector('.text-center');
                     if (loadingDiv) {
                         loadingDiv.remove();
@@ -86,18 +82,15 @@ $script = <<<JS
                 
                 buffer += decoder.decode(result.value, { stream: true });
                 
-                // Разбиваем на строки для обработки
                 var lines = buffer.split('\\n');
-                buffer = lines.pop(); // Последняя строка может быть неполной
+                buffer = lines.pop();
                 
-                // Добавляем содержимое
                 lines.forEach(function(line) {
                     if (line.trim()) {
                         appendMarkdown(line + '\\n');
                     }
                 });
                 
-                // Продолжаем чтение
                 return readChunk();
             });
         }
@@ -110,17 +103,14 @@ $script = <<<JS
     });
     
     function appendMarkdown(text) {
-        // Убираем индикатор загрузки при первом появлении контента
         var loadingDiv = storyContent.querySelector('.text-center');
         if (loadingDiv && text.trim()) {
             loadingDiv.remove();
             storyContent.innerHTML = '';
         }
         
-        // Простое преобразование Markdown в HTML
         var html = convertMarkdownToHtml(text);
         
-        // Создаём временный элемент для вставки
         var temp = document.createElement('div');
         temp.innerHTML = html;
         
@@ -128,12 +118,10 @@ $script = <<<JS
             storyContent.appendChild(temp.firstChild);
         }
         
-        // Скроллим вниз
         window.scrollTo(0, document.body.scrollHeight);
     }
     
     function convertMarkdownToHtml(text) {
-        // Простое преобразование Markdown (можно заменить на библиотеку)
         var html = escapeHtml(text);
         html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
         html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');

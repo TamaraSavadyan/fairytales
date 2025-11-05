@@ -13,10 +13,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Настройка CORS для работы с фронтендом
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # В продакшене указать конкретные домены
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,7 +55,6 @@ async def generate_story(request: StoryRequest):
     Returns:
         StreamingResponse с текстом сказки в формате Markdown
     """
-    # Создаём генератор
     try:
         generator = OpenAIStoryGenerator()
     except ValueError as e:
@@ -64,7 +62,6 @@ async def generate_story(request: StoryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка инициализации: {str(e)}")
     
-    # Создаём функцию-генератор для StreamingResponse
     def generate() -> Generator[str, None, None]:
         error_occurred = False
         try:
@@ -81,13 +78,12 @@ async def generate_story(request: StoryRequest):
             error_occurred = True
             error_msg = f"\n\n**Ошибка при генерации сказки:** {str(e)}\n"
             yield error_msg
-            # Не можем поднять HTTPException из генератора, поэтому просто возвращаем ошибку в потоке
     
     return StreamingResponse(
         generate(),
         media_type="text/markdown; charset=utf-8",
         headers={
-            "X-Accel-Buffering": "no",  # Отключаем буферизацию в Nginx
+            "X-Accel-Buffering": "no",
             "Cache-Control": "no-cache",
             "Connection": "keep-alive"
         }
